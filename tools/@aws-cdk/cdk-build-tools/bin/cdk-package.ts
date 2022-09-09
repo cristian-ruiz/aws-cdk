@@ -34,6 +34,13 @@ async function main() {
     return;
   }
 
+  // Run any pre commands
+  if (options.pre) {
+    const commands = options.pre.join(' && ');
+    await shell([commands], { timers });
+  }
+
+
   // If we need to shrinkwrap this, do so now.
   if (options.shrinkWrap) {
     await yarnCling.generateShrinkwrap({
@@ -65,7 +72,8 @@ async function main() {
   }
 
   if (options.post) {
-    await shell(options.post, { timers });
+    const commands = options.post.join(' && ');
+    await shell([commands], { timers });
   }
 }
 
